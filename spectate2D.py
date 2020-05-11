@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import json
 import pygame
 import sys
@@ -5,16 +6,19 @@ from pygame.locals import *
 import requests
 
 # globals
+IP = "127.0.0.1"
+
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 ORANGE = (255, 140, 0)
+PURPLE = (238, 130, 238)
 
 DIMS_ARENA = (30, 20, 80)
 DIMS_SCALE = 17
-gdist = DIMS_SCALE * 4
+GDIST = DIMS_SCALE * 4
 DIMS = (DIMS_ARENA[2] * DIMS_SCALE, DIMS_ARENA[0] * DIMS_SCALE)
 
 EV_FRAME = pygame.USEREVENT + 1
@@ -25,12 +29,13 @@ FONT = None
 stuncounter = 0
 stun_counter_reset = 21
 
+
 def draw_text(position, text):
     text = FONT.render(text, True, WHITE, None)
-    textRect = text.get_rect()
-    textRect.centerx = position[0]
-    textRect.centery = position[1]
-    SURFACE.blit(text, textRect)
+    text_rect = text.get_rect()
+    text_rect.centerx = position[0]
+    text_rect.centery = position[1]
+    SURFACE.blit(text, text_rect)
 
 
 def refresh():
@@ -44,32 +49,39 @@ def refresh():
         SURFACE, WHITE, (DIMS[0] - 10, 10), (DIMS[0] - 10, DIMS[1] - 10), 2
     )
     g1 = (
-        (gdist, SURFACE.get_rect().centery - 15),
-        (gdist, SURFACE.get_rect().centery + 15)
+        (GDIST, SURFACE.get_rect().centery - 15),
+        (GDIST, SURFACE.get_rect().centery + 15)
     )
     g2 = (
-        (DIMS[0] - gdist, SURFACE.get_rect().centery - 15),
-        (DIMS[0] - gdist, SURFACE.get_rect().centery + 15),
+        (DIMS[0] - GDIST, SURFACE.get_rect().centery - 15),
+        (DIMS[0] - GDIST, SURFACE.get_rect().centery + 15),
     )
     pygame.draw.line(SURFACE, BLUE, g1[0], g1[1], 2)
     pygame.draw.line(SURFACE, RED, g2[0], g2[1], 2)
+    pygame.draw.line(
+        SURFACE, BLUE, (SURFACE.get_rect().centerx - (4 * DIMS_SCALE), 10),
+        (SURFACE.get_rect().centerx - (4 * DIMS_SCALE), DIMS[1]-10), 2)
+    pygame.draw.line(
+        SURFACE, RED, (SURFACE.get_rect().centerx + (4 * DIMS_SCALE), 10),
+        (SURFACE.get_rect().centerx + (4 * DIMS_SCALE), DIMS[1] - 10), 2)
 
 
 def coord_transform(position):
     x = (position[0] + DIMS_ARENA[0] / 2) * DIMS_SCALE
-    y = (position[1] + DIMS_ARENA[1] / 2) * DIMS_SCALE
+# y is unused
+#   y = (position[1] + DIMS_ARENA[1] / 2) * DIMS_SCALE
     z = (position[2] + DIMS_ARENA[2] / 2) * DIMS_SCALE
 
-    return (int(z), int(x))
+    return int(z), int(x)
 
 
-def draw_player(player, color):
+def draw_player(player, teamcolor):
     if player["stunned"] and (stuncounter < (stun_counter_reset/2)):
         return True
     position = coord_transform(player["position"])
     if player["possession"]:
-        pygame.draw.circle(SURFACE, GREEN, position, 13, 0)
-    pygame.draw.circle(SURFACE, color, position, 10, 0)
+        pygame.draw.circle(SURFACE, GREEN, position, 12, 0)
+    pygame.draw.circle(SURFACE, teamcolor, position, 10, 0)
     ycolornum = 255*((player["position"][1]+10)/20)
     heightcolor = (ycolornum, ycolornum, ycolornum)
     pygame.draw.circle(SURFACE, heightcolor, position, 7, 0)
@@ -88,19 +100,21 @@ def draw_disc(disc):
 
 
 def get_frame():
-    content = json.loads(requests.get("http://127.0.0.1/session").content)
+    content = json.loads(requests.get("http://"+IP+"/session").content)
     return content
 
 
-def draw_frame(frame):
-    for team in frame["teams"]:
-        color = RED if "ORANGE" in team["team"] else BLUE
+def draw_frame(framedata):
+    for team in framedata["teams"]:
+        teamcolor = RED if "ORANGE" in team["team"] else BLUE
         for player in team["players"]:
-            draw_player(player, color)
-    draw_disc(frame["disc"])
-    draw_text((SURFACE.get_rect().centerx, 20), frame["game_clock_display"])
-    draw_text((20, 20), str(frame["teams"][0]["stats"]["points"]))
-    draw_text((DIMS[0] - 20, 20), str(frame["teams"][1]["stats"]["points"]))
+            if player["name"] == framedata["client_name"]:
+                teamcolor = PURPLE
+            draw_player(player, teamcolor)
+    draw_disc(framedata["disc"])
+    draw_text((SURFACE.get_rect().centerx, 20), framedata["game_clock_display"])
+    draw_text((20, 20), str(framedata["teams"][0]["stats"]["points"]))
+    draw_text((DIMS[0] - 20, 20), str(framedata["teams"][1]["stats"]["points"]))
 
 
 if __name__ == "__main__":
@@ -120,8 +134,9 @@ if __name__ == "__main__":
             refresh()
             draw_frame(frame)
             pygame.display.update()
-        except:
-            pass
+        except json.decoder.JSONDecodeError:
+            refresh()
+            pygame.display.update()
         stuncounter += 1
         if stuncounter == stun_counter_reset:
             stuncounter = 0
