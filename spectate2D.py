@@ -5,9 +5,19 @@ import sys
 from pygame.locals import *
 import requests
 
-# globals
-IP = "127.0.0.1"
+# config file
+try:
+    with open("config.json", "r") as configfile:
+        config = json.load(configfile)
+    IP = config["ip_address"]
+    DIMS_SCALE = config["pixels_per_meter"]
+    PLAYER_SCALE = config["player_size"]
+    DISC_SCALE = config["disc_size"]
+except FileNotFoundError:
+    print("No config file found.")
+    sys.exit()
 
+# other globals
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -17,11 +27,8 @@ ORANGE = (255, 140, 0)
 PURPLE = (238, 130, 238)
 
 DIMS_ARENA = (30, 20, 80)
-DIMS_SCALE = 17
 GDIST = DIMS_SCALE * 4
 DIMS = (DIMS_ARENA[2] * DIMS_SCALE, DIMS_ARENA[0] * DIMS_SCALE)
-
-EV_FRAME = pygame.USEREVENT + 1
 
 SURFACE = None
 FONT = None
@@ -80,11 +87,11 @@ def draw_player(player, teamcolor):
         return True
     position = coord_transform(player["position"])
     if player["possession"]:
-        pygame.draw.circle(SURFACE, GREEN, position, 12, 0)
-    pygame.draw.circle(SURFACE, teamcolor, position, 10, 0)
+        pygame.draw.circle(SURFACE, GREEN, position, 12*PLAYER_SCALE, 0)
+    pygame.draw.circle(SURFACE, teamcolor, position, 10*PLAYER_SCALE, 0)
     ycolornum = 255*((player["position"][1]+10)/20)
     heightcolor = (ycolornum, ycolornum, ycolornum)
-    pygame.draw.circle(SURFACE, heightcolor, position, 7, 0)
+    pygame.draw.circle(SURFACE, heightcolor, position, 7*PLAYER_SCALE, 0)
 
 # Names removed because I wanted less clutter
 #   position2 = (position[0], position[1] - 12)
@@ -95,8 +102,8 @@ def draw_disc(disc):
     position = coord_transform(disc["position"])
     ycolornum = 255 * ((disc["position"][1] + 10) / 20)
     heightcolor = (ycolornum, ycolornum, ycolornum)
-    pygame.draw.circle(SURFACE, WHITE, position, 7, 0)
-    pygame.draw.circle(SURFACE, heightcolor, position, 5, 0)
+    pygame.draw.circle(SURFACE, WHITE, position, 7*DISC_SCALE, 0)
+    pygame.draw.circle(SURFACE, heightcolor, position, 5*DISC_SCALE, 0)
 
 
 def get_frame():
