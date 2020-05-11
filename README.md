@@ -2,7 +2,9 @@
 This python file reads from the EchoVR API to spectate matches.
 Credit to @bust in the EchoVR Discord server for the original program, which can be found [here](https://github.com/qlyoung/echovr-replay/blob/master/replay2d/replay.py).
 
-Changes from original:
+**The config file is required and must be in the same directory as the python file**
+
+Changes from original by @bust:
 - Now reads from the API instead of a saved match.
 - Shows height of players and disc using a varying white to black circle
 - Moved possession indicator to the outside of the player circle
