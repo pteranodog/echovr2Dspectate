@@ -2,7 +2,13 @@
 This python file reads from the EchoVR API to spectate matches.
 Credit to @bust in the EchoVR Discord server for the original program, which can be found [here](https://github.com/qlyoung/echovr-replay/blob/master/replay2d/replay.py).
 
+# USAGE
+
+To run the program as an .exe file, download the Source Code.zip from Releases and run the .exe file within it.
+
 **The config file is required and must be in the same directory**
+
+# Changes
 
 Changes from original by @bust:
 - Now reads from the API instead of a saved match.
