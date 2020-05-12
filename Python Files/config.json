@@ -1,6 +1,50 @@
 {
   "ip_address": "127.0.0.1",
-  "pixels_per_meter": 17,
-  "player_size": 1,
-  "disc_size": 1
+  "override_ip_with_full_path": false,
+  "full_path": "http://127.0.0.1/session",
+  "orange_team_name": "ORANGE",
+  "blue_team_name": "BLUE",
+  "use_red_for_orange_team": false,
+
+  "sizes": {
+    "pixels_per_meter": 15,
+    "player_size": 1,
+    "disc_size": 1,
+    "font_size": 40,
+    "line_thickness_if_no_background": 2
+  },
+
+  "colors": {
+    "black":  [0, 0, 0],
+    "white":  [255, 255, 255],
+    "red":    [255, 0, 0],
+    "green":  [0, 255, 0],
+    "blue":   [0, 0, 255],
+    "orange": [255, 140, 0],
+    "purple": [238, 130, 238],
+    "timer_color": [0, 255, 0],
+    "points_color": [255, 255, 255],
+    "names_color": [255, 255, 255]
+  },
+
+  "stuns": {
+    "flash_when_stunned": true,
+    "stun_flash_speed": 21
+  },
+
+  "elements": {
+    "show_time": true,
+    "show_scores": true,
+    "show_names": false,
+    "show_height_with_color": true,
+    "show_possession": true,
+    "show_host_as_purple": true
+  },
+
+  "background_image": {
+    "use_background_image": true,
+    "image_file": "EAMap.jpg",
+    "offset_xy": [2, -14]
+  }
+
 }
