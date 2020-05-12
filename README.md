@@ -2,9 +2,9 @@
 This python file reads from the EchoVR API to spectate matches.
 
 It can be used as a spectator tool for others to watch along, or as a minimap for streams/videos.
-Feel free to change the config file to suit your needs, and if there's something that you'd like to change that isn't in the config file, I can be found on the [Echo Games Discord server](https://github.com/qlyoung/echovr-replay/blob/master/replay2d/replay.py) with the username @Pteranodog.
+Feel free to change the config file to suit your needs, and if there's something that you'd like to change that isn't in the config file, I can be found on the [Echo Games Discord server](discord.echo.games) with the username @Pteranodog.
 
-Credit to @bust in the EchoVR Discord server for the original program, which, again,  can be found [here](https://github.com/qlyoung/echovr-replay/blob/master/replay2d/replay.py).
+Credit to @bust in the EchoVR Discord server for the original program, which can be found [here](https://github.com/qlyoung/echovr-replay/blob/master/replay2d/replay.py).
 
 # USAGE
 
