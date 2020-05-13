@@ -1,35 +1,42 @@
 {
   "ip_address": "127.0.0.1",
   "override_ip_with_full_path": false,
-  "full_path": "http://127.0.0.1/session",
+  "full_path": "http://127.0.0.1:6721/session",
   "orange_team_name": "ORANGE",
   "blue_team_name": "BLUE",
-  "use_red_for_orange_team": false,
 
   "sizes": {
+    "player_size_config": {
+      "stunned_indicator": 14,
+      "possession_indicator": 12,
+      "player": 10,
+      "height_indicator": 7
+    },
+    "disc_size_config": {
+      "disc": 7,
+      "height_indicator": 5
+    },
     "pixels_per_meter": 15,
-    "player_size": 1,
-    "disc_size": 1,
+    "player_scale": 1,
+    "disc_scale": 1,
     "font_size": 40,
     "line_thickness_if_no_background": 2
   },
 
   "colors": {
-    "black":  [0, 0, 0],
-    "white":  [255, 255, 255],
-    "red":    [255, 0, 0],
-    "green":  [0, 255, 0],
-    "blue":   [0, 0, 255],
-    "orange": [255, 140, 0],
-    "purple": [238, 130, 238],
+    "background_color": [0, 0, 0],
+    "outlines_color": [255, 255, 255],
+    "disc_color": [255, 255, 255],
     "timer_color": [0, 255, 0],
     "points_color": [255, 255, 255],
-    "names_color": [255, 255, 255]
-  },
-
-  "stuns": {
-    "flash_when_stunned": true,
-    "stun_flash_speed": 21
+    "names_color": [255, 255, 255],
+    "possession_color": [0, 255, 0],
+    "stunned_color": [255, 0, 0],
+    "blue_team_color": [0, 0, 255],
+    "orange_team_color": [255, 140, 0],
+    "host_color_blue": [238, 130, 238],
+    "host_color_orange": [238, 130, 238],
+    "error_message_color": [255, 255, 255]
   },
 
   "elements": {
@@ -38,7 +45,8 @@
     "show_names": false,
     "show_height_with_color": true,
     "show_possession": true,
-    "show_host_as_purple": true
+    "show_stunned": true,
+    "host_different_color": true
   },
 
   "background_image": {
