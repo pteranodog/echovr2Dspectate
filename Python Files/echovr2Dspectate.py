@@ -4,6 +4,7 @@ import pygame
 import sys
 from pygame.locals import *
 import requests
+import pprint
 
 global ERROR_CHECK_LOGS
 DIMS_SCALE = 1
@@ -65,7 +66,7 @@ except FileNotFoundError:
     print("No config file found. Try downloading the config file again.")
     ERROR_CHECK_LOGS = True
 except KeyError:
-    print("Error in config file. Try downloading the config file again.")
+    print("Error in config file. Try downloading the config file again. Code: 1")
     ERROR_CHECK_LOGS = True
 
 # other globals
@@ -141,7 +142,7 @@ def coord_transform(position):
 def draw_player(player, team_color):
     global ERROR_CHECK_LOGS
     try:
-        position = coord_transform(player["position"])
+        position = coord_transform(player["head"]["position"])
         if player["stunned"] and SHOW_STUNS:
             pygame.draw.circle(SURFACE, STUNNED_COLOR, position,
                                int(PLAYER_SIZES["stunned_indicator"] * PLAYER_SCALE), 0)
@@ -150,14 +151,14 @@ def draw_player(player, team_color):
                                int(PLAYER_SIZES["possession_indicator"] * PLAYER_SCALE), 0)
         pygame.draw.circle(SURFACE, team_color, position, int(PLAYER_SIZES["player"] * PLAYER_SCALE), 0)
         if SHOW_HEIGHT:
-            y_color_num = 255 * ((player["position"][1] + 10) / 20)
+            y_color_num = 255 * ((player["head"]["position"][1] + 10) / 20)
             height_color = (y_color_num, y_color_num, y_color_num)
             pygame.draw.circle(SURFACE, height_color, position, int(PLAYER_SIZES["height_indicator"]*PLAYER_SCALE), 0)
         if SHOW_NAMES:
             position2 = (position[0], position[1] - ((int(12*PLAYER_SCALE))+(FONT_SIZE/2)))
             draw_text(position2, player["name"], NAMES_COLOR)
     except KeyError:
-        print("Error in config file. Try downloading the config file again.")
+        print("Error in config file. Try downloading the config file again. Code: 2")
         ERROR_CHECK_LOGS = True
 
 
@@ -172,7 +173,7 @@ def draw_disc(disc):
             height_color = (y_color_num, y_color_num, y_color_num)
             pygame.draw.circle(SURFACE, height_color, position, int(DISC_SIZES["height_indicator"]*DISC_SCALE), 0)
     except KeyError:
-        print("Error in config file. Try downloading the config file again.")
+        print("Error in config file. Try downloading the config file again. Code: 3")
         ERROR_CHECK_LOGS = True
 
 
@@ -193,16 +194,29 @@ def draw_frame(frame_data):
     if not (SESSION_NOT_FOUND or JSON_ERROR or ERROR_CHECK_LOGS):
         for team in frame_data["teams"]:
             team_color = ORANGE_TEAM_COLOR if ORANGE_TEAM_NAME in team["team"] else BLUE_TEAM_COLOR
-            for player in team["players"]:
-                if player["name"] == frame_data["client_name"] and HOST_DIFFERENT_COLOR:
-                    team_color = HOST_COLOR_ORANGE if ORANGE_TEAM_NAME in team["team"] else HOST_COLOR_BLUE
-                draw_player(player, team_color)
-        draw_disc(frame_data["disc"])
+            try:
+                for player in team["players"]:
+                    pprint.pprint(player)
+                    if player["name"] == frame_data["client_name"] and HOST_DIFFERENT_COLOR:
+                        team_color = HOST_COLOR_ORANGE if ORANGE_TEAM_NAME in team["team"] else HOST_COLOR_BLUE
+                    draw_player(player, team_color)
+            except KeyError:
+                print('Draw Player Error')
+        try:
+            draw_disc(frame_data["disc"])
+        except KeyError:
+            pass
         if SHOW_TIME:
-            draw_text((SURFACE.get_rect().centerx, 20), frame_data["game_clock_display"], TIMER_COLOR)
+            try:
+                draw_text((SURFACE.get_rect().centerx, 20), frame_data["game_clock_display"], TIMER_COLOR)
+            except KeyError:
+                print('Time error')
         if SHOW_SCORES:
-            draw_text((20, 20), str(frame_data["teams"][0]["stats"]["points"]), POINTS_COLOR)
-            draw_text((DIMS[0] - 20, 20), str(frame_data["teams"][1]["stats"]["points"]), POINTS_COLOR)
+            try:
+                draw_text((20, 20), str(frame_data["teams"][0]["stats"]["points"]), POINTS_COLOR)
+                draw_text((DIMS[0] - 20, 20), str(frame_data["teams"][1]["stats"]["points"]), POINTS_COLOR)
+            except KeyError:
+                print('Score Error')
     elif SESSION_NOT_FOUND:
         draw_text((SURFACE.get_rect().centerx, SURFACE.get_rect().centery), "No data to display", ERROR_COLOR)
     elif JSON_ERROR:

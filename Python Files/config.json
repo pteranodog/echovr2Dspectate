@@ -1,5 +1,5 @@
 {
-  "ip_address": "127.0.0.1",
+  "ip_address": "192.168.1.136",
   "override_ip_with_full_path": false,
   "full_path": "http://127.0.0.1:6721/session",
   "orange_team_name": "ORANGE",
@@ -46,7 +46,7 @@
     "show_height_with_color": true,
     "show_possession": true,
     "show_stunned": true,
-    "host_different_color": true
+    "host_different_color": false
   },
 
   "background_image": {
