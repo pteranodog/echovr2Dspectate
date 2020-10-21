@@ -1,4 +1,6 @@
-# echovr2Dspectate
+# echovr2Dspectate (Depracated)
+*This program no longer works properly with the current version of EchoVR.*
+
 This python file reads from the EchoVR API to spectate matches.
 
 It can be used as a spectator tool for others to watch along, or as a minimap for streams/videos.
